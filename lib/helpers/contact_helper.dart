@@ -16,6 +16,7 @@ class ContactHelper {
 
   ContactHelper.internal();
 
+  //cannt be LATE because it is a singleton
   Database? _db;
 
   Future<Database?> get db async {
