@@ -1,25 +1,9 @@
+import 'package:contact_book_app/ui/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: Text('Contact Book App'),
-      ),
-      body: Home(),
-    ),
+    debugShowCheckedModeBanner: false,
+    home: HomePage(),
   ));
-}
-
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Hello World'),
-      ),
-    );
-  }
 }
