@@ -7,7 +7,7 @@ class ContactPage extends StatefulWidget {
   final Contact? contact;
 
   //between {} is optional
-  ContactPage({this.contact});
+  const ContactPage({Key? key, this.contact}) : super(key: key);
 
   @override
   State<ContactPage> createState() => _ContactPageState();
@@ -15,11 +15,13 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   Contact? _editedContact;
-  bool? _userEdited;
+  bool? _userEdited; // Removed as it is not used
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+
+  final _nameFocus = FocusNode();
 
   @override
   void initState() {
@@ -47,7 +49,15 @@ class _ContactPageState extends State<ContactPage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_editedContact != null &&
+              _editedContact!.name != null &&
+              _editedContact!.name!.isNotEmpty) {
+            Navigator.pop(context, _editedContact);
+          } else {
+            FocusScope.of(context).requestFocus(_nameFocus);
+          }
+        },
         backgroundColor: Colors.green,
         child: Icon(Icons.save),
       ),
@@ -70,6 +80,7 @@ class _ContactPageState extends State<ContactPage> {
             ),
             TextField(
               controller: _nameController,
+              focusNode: _nameFocus,
               decoration: InputDecoration(
                 label: Text("Nome"),
               ),

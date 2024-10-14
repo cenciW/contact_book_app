@@ -20,12 +20,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Contact c = Contact();
-    // c.name = "José Augusto";
-    // c.email = "ze @gmail";
-    // c.phone = "123456";
-    // c.img = "images/person.png";
-    // contactHelper.saveContact(c);
+    Contact c = Contact();
+    c.name = "José Augusto";
+    c.email = "ze @gmail";
+    c.phone = "123456";
+    c.img = "images/person.png";
+    contactHelper.saveContact(c);
     _getAllContacts();
   }
 
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
     contactHelper.getAllContacts().then((list) {
       setState(() {
         contacts = list.cast<Contact>();
-        // print("contacts: $contacts");
+        print("contacts: $contacts");
       });
     });
   }
