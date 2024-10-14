@@ -12,24 +12,39 @@ class _HomePageState extends State<HomePage> {
   //é singleton, static ou seja, independente de quantos n instanciar sempre será o mesmo
   ContactHelper contactHelper = ContactHelper();
 
+  List<Contact>? contacts;
+
   @override
   void initState() {
     super.initState();
 
-    Contact c = Contact();
-    c.name = "Jadir Junior";
-    c.email = "junior@gmail.com";
-    c.phone = "551999929";
-    c.img = "imgteste";
-
-    contactHelper.saveContact(c);
     contactHelper.getAllContacts().then((list) {
-      print(list.toString());
+      setState(() {
+        // contacts = list.cast<Contact>();
+        contacts = list.cast<Contact>();
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Contatos"),
+        backgroundColor: Colors.green,
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.green,
+        child: Icon(Icons.add),
+      ),
+      body: ListView.builder(
+        padding: EdgeInsets.all(10),
+        itemCount: contacts?.length,
+        itemBuilder: (context, index) {},
+      ),
+    );
   }
 }
