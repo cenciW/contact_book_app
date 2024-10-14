@@ -98,6 +98,8 @@ class ContactHelper {
       contactList.add(Contact.fromMap(m));
     }
 
+    // print(contactList.toList().toString());
+
     return contactList;
   }
 
