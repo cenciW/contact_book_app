@@ -41,79 +41,117 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        //if doesn't have a contact, it's a new contact
-        title: Text(_editedContact?.name ?? "Novo Contato"),
-        backgroundColor: Colors.green,
-        centerTitle: true,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_editedContact != null &&
-              _editedContact!.name != null &&
-              _editedContact!.name!.isNotEmpty) {
-            Navigator.pop(context, _editedContact);
-          } else {
-            FocusScope.of(context).requestFocus(_nameFocus);
-          }
-        },
-        backgroundColor: Colors.green,
-        child: Icon(Icons.save),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            GestureDetector(
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: _editedContact!.img != null
-                          ? FileImage(File(_editedContact!.img!))
-                          : AssetImage('images/person.png') as ImageProvider),
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: Scaffold(
+        appBar: AppBar(
+          //if doesn't have a contact, it's a new contact
+          title: Text(_editedContact?.name ?? "Novo Contato"),
+          backgroundColor: Colors.green,
+          centerTitle: true,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_editedContact != null &&
+                _editedContact!.name != null &&
+                _editedContact!.name!.isNotEmpty) {
+              Navigator.pop(context, _editedContact);
+            } else {
+              FocusScope.of(context).requestFocus(_nameFocus);
+            }
+          },
+          backgroundColor: Colors.green,
+          child: Icon(Icons.save),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              GestureDetector(
+                child: Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: _editedContact!.img != null
+                            ? FileImage(File(_editedContact!.img!))
+                            : AssetImage('images/person.png') as ImageProvider),
+                  ),
                 ),
               ),
-            ),
-            TextField(
-              controller: _nameController,
-              focusNode: _nameFocus,
-              decoration: InputDecoration(
-                label: Text("Nome"),
+              TextField(
+                controller: _nameController,
+                focusNode: _nameFocus,
+                decoration: InputDecoration(
+                  label: Text("Nome"),
+                ),
+                onChanged: (text) {
+                  _userEdited = true;
+                  _editedContact!.name = text;
+                },
               ),
-              onChanged: (text) {
-                _userEdited = true;
-                _editedContact!.name = text;
-              },
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                label: Text("Email"),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  label: Text("Email"),
+                ),
+                onChanged: (text) {
+                  _userEdited = true;
+                  _editedContact!.email = text;
+                },
+                keyboardType: TextInputType.emailAddress,
               ),
-              onChanged: (text) {
-                _userEdited = true;
-                _editedContact!.email = text;
-              },
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                label: Text("Telefone"),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  label: Text("Telefone"),
+                ),
+                onChanged: (text) {
+                  _userEdited = true;
+                  _editedContact!.phone = text;
+                },
+                keyboardType: TextInputType.phone,
               ),
-              onChanged: (text) {
-                _userEdited = true;
-                _editedContact!.phone = text;
-              },
-              keyboardType: TextInputType.phone,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<bool> _requestPop() {
+    if (_userEdited == true) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Descartar Alterações?"),
+              content: Text("Se sair, as alterações serão perdidas."),
+              actions: [
+                TextButton(
+                  child: Text("Cancelar"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text("Sim"),
+                  onPressed: () {
+                    //pop AlertDialog
+                    Navigator.pop(context);
+                    //pop ContactPage
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          });
+      //don't left automatically
+      return Future.value(false);
+    } else {
+      //left automatically
+      return Future.value(true);
+    }
   }
 }
