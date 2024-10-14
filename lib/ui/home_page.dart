@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:contact_book_app/helpers/contact_helper.dart';
+import 'package:contact_book_app/ui/contact_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,14 +24,9 @@ class _HomePageState extends State<HomePage> {
     // c.name = "José Augusto";
     // c.email = "ze @gmail";
     // c.phone = "123456";
-    // c.img = "person";
+    // c.img = "images/person.png";
     // contactHelper.saveContact(c);
-
-    contactHelper.getAllContacts().then((list) {
-      setState(() {
-        contacts = list.cast<Contact>();
-      });
-    });
+    _getAllContacts();
   }
 
   @override
@@ -43,7 +39,9 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _showContactPage();
+        },
         backgroundColor: Colors.green,
         child: Icon(Icons.add),
       ),
@@ -110,6 +108,37 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      onTap: () => _showContactPage(contact: contacts![index]),
     );
+  }
+
+  void _showContactPage({Contact? contact}) async {
+    final recContact = await Navigator.push(
+      context,
+      //sending data to next page
+      MaterialPageRoute(
+        builder: (context) => ContactPage(
+          contact: contact,
+        ),
+      ),
+    );
+
+    if (recContact != null) {
+      if (contact != null) {
+        await contactHelper.updateContact(recContact);
+      } else {
+        await contactHelper.saveContact(recContact);
+      }
+      _getAllContacts();
+    }
+  }
+
+  void _getAllContacts() {
+    contactHelper.getAllContacts().then((list) {
+      setState(() {
+        contacts = list.cast<Contact>();
+        // print("contacts: $contacts");
+      });
+    });
   }
 }
