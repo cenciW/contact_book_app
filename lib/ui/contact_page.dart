@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:contact_book_app/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ContactPage extends StatefulWidget {
   final Contact? contact;
 
-  //between {} is optional
   const ContactPage({Key? key, this.contact}) : super(key: key);
 
   @override
@@ -15,7 +16,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   Contact? _editedContact;
-  bool? _userEdited; // Removed as it is not used
+  bool? _userEdited;
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -32,7 +33,6 @@ class _ContactPageState extends State<ContactPage> {
     } else {
       _editedContact = Contact.fromMap(widget.contact!.toMap());
 
-      //taking the contacts data and getting the atr
       _nameController.text = _editedContact!.name!;
       _emailController.text = _editedContact!.email!;
       _phoneController.text = _editedContact!.phone!;
@@ -45,7 +45,6 @@ class _ContactPageState extends State<ContactPage> {
       onWillPop: _requestPop,
       child: Scaffold(
         appBar: AppBar(
-          //if doesn't have a contact, it's a new contact
           title: Text(_editedContact?.name ?? "Novo Contato"),
           backgroundColor: Colors.green,
           centerTitle: true,
@@ -74,11 +73,23 @@ class _ContactPageState extends State<ContactPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: _editedContact!.img != null
-                            ? FileImage(File(_editedContact!.img!))
-                            : AssetImage('images/person.png') as ImageProvider),
+                      image: _editedContact!.img != null
+                          ? FileImage(File(_editedContact!.img!))
+                          : AssetImage('images/person.png') as ImageProvider,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+                onTap: () async {
+                  final pickedFile =
+                      await ImagePicker().pickImage(source: ImageSource.camera);
+                  if (pickedFile == null) return;
+
+                  setState(() {
+                    _editedContact!.img = pickedFile.path;
+                    _userEdited = true;
+                  });
+                },
               ),
               TextField(
                 controller: _nameController,
@@ -138,19 +149,15 @@ class _ContactPageState extends State<ContactPage> {
                 TextButton(
                   child: Text("Sim"),
                   onPressed: () {
-                    //pop AlertDialog
                     Navigator.pop(context);
-                    //pop ContactPage
                     Navigator.pop(context);
                   },
                 ),
               ],
             );
           });
-      //don't left automatically
       return Future.value(false);
     } else {
-      //left automatically
       return Future.value(true);
     }
   }

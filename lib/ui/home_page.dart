@@ -22,12 +22,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Contact c = Contact();
-    c.name = "José Augusto";
-    c.email = "ze @gmail";
-    c.phone = "123456";
-    c.img = "images/person.png";
-    contactHelper.saveContact(c);
+    // Contact c = Contact();
+    // c.name = "José Augusto";
+    // c.email = "ze @gmail";
+    // c.phone = "123456";
+    // c.img = "images/person.png";
+    // contactHelper.saveContact(c);
     _getAllContacts();
   }
 
@@ -62,57 +62,59 @@ class _HomePageState extends State<HomePage> {
     if (contact == null) return SizedBox.shrink();
 
     return GestureDetector(
-        child: Card(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            //now the content
-            child: Row(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: contact.img != null
-                            ? FileImage(File(contact.img!))
-                            : AssetImage('images/person.png') as ImageProvider),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: contact.img != null && contact.img!.isNotEmpty
+                        ? FileImage(File(contact.img!))
+                        : AssetImage('images/person.png'),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        contact.name ?? "",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      contact.name ?? "",
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        contact.email ?? "",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                    ),
+                    Text(
+                      contact.email ?? "",
+                      style: TextStyle(
+                        fontSize: 18.0,
                       ),
-                      Text(
-                        contact.phone ?? "",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                    ),
+                    Text(
+                      contact.phone ?? "",
+                      style: TextStyle(
+                        fontSize: 18.0,
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
-        onTap: () {
-          _showOptions(context, index);
-        });
+      ),
+      onTap: () {
+        _showOptions(context, index);
+      },
+    );
   }
 
   void _showOptions(BuildContext context, int index) {
