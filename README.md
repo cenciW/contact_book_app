@@ -23,3 +23,5 @@ samples, guidance on mobile development, and a full API reference.
 ![Description of the image](./screenshots_readme/4.png)
 ![Description of the image](./screenshots_readme/5.png)
 ![Description of the image](./screenshots_readme/6.png)
+![Description of the image](./screenshots_readme/7.png)
+![Description of the image](./screenshots_readme/8.png)
