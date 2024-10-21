@@ -4,6 +4,8 @@ import 'package:contact_book_app/helpers/contact_helper.dart';
 import 'package:contact_book_app/ui/contact_page.dart';
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -127,9 +129,30 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          launchUrl(
+                              Uri.parse("tel:${contacts?[index].phone!}"));
+                          Navigator.pop(context);
+                        },
                         child: Text(
                           "Ligar",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          launchUrl(
+                              Uri.parse("sms:${contacts?[index].phone!}"));
+                        },
+                        child: Text(
+                          "Enviar SMS",
                           style: TextStyle(
                             color: Colors.green,
                             fontSize: 20,
