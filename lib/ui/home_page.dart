@@ -60,56 +60,126 @@ class _HomePageState extends State<HomePage> {
     if (contact == null) return SizedBox.shrink();
 
     return GestureDetector(
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          //now the content
-          child: Row(
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: contact.img != null
-                          ? FileImage(File(contact.img!))
-                          : AssetImage('images/person.png') as ImageProvider),
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            //now the content
+            child: Row(
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: contact.img != null
+                            ? FileImage(File(contact.img!))
+                            : AssetImage('images/person.png') as ImageProvider),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        contact.name ?? "",
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        contact.email ?? "",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      Text(
+                        contact.phone ?? "",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        onTap: () {
+          _showOptions(context, index);
+        });
+  }
+
+  void _showOptions(BuildContext context, int index) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+            builder: (context) {
+              return Container(
+                padding: EdgeInsets.all(10),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      contact.name ?? "",
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Ligar",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      contact.email ?? "",
-                      style: TextStyle(
-                        fontSize: 18.0,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showContactPage(contact: contacts?[index]);
+                        },
+                        child: Text(
+                          "Editar",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      contact.phone ?? "",
-                      style: TextStyle(
-                        fontSize: 18.0,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            contactHelper.deleteContact(contacts![index].id!);
+                            contacts?.removeAt(index);
+                            //fechar a janelinha
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Text(
+                          "Deletar",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-      onTap: () => _showContactPage(contact: contacts![index]),
-    );
+              );
+            },
+            onClosing: () {},
+          );
+        });
   }
 
   void _showContactPage({Contact? contact}) async {
